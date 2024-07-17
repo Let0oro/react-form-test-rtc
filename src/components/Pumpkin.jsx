@@ -27,16 +27,16 @@ const PumpkinCSS = ({ state }) => {
       <Pumpkin>
         <Stem className="stem" />
 
-        <Segment className="segment" />
-        <Segment className="segment" />
-        <Segment className="segment" />
-        <Segment className="segment" />
-        <Segment className="segment" />
+        <Segment $state={state} className="segment" />
+        <Segment $state={state} className="segment" />
+        <Segment $state={state} className="segment" />
+        <Segment $state={state} className="segment" />
+        <Segment $state={state} className="segment" />
 
-        <EyeL className="eye left" />
-        <EyeR className="eye right" />
+        <EyeL $state={state} className="eye left" />
+        <EyeR $state={state} className="eye right" />
 
-        <Mouth className="mouth" />
+        <Mouth $state={state} className="mouth" />
       </Pumpkin>
     </div>
   );
@@ -147,8 +147,17 @@ const Segment = styled.div`
     #fb9a39 0%,
     #c13c07 100%
   ); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fb9a39', endColorstr='#c13c07',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-  box-shadow: 0 0 20px rgba(206, 79, 51, 1);
+  ${({$state}) => /(upset)|(complete)/gi.test($state) &&
+  ({
+    "upset": `
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fb9a39', endColorstr='#c13c07',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    box-shadow: 0 0 20px rgb(213, 62, 28);
+    `,
+    "complete": `
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fb9a39', endColorstr='#c13c07',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    box-shadow: 0 0 20px rgba(206, 79, 51, 1);
+    `,
+  }[$state])}
 
   &:after {
     content: "";
@@ -230,6 +239,21 @@ const EyeL = styled.div`
   height: 0px;
   left: -10px;
   top: 30px;
+  -webkit-transform: rotate(-20deg);
+  -moz-transform: rotate(-20deg);
+  -ms-transform: rotate(-20deg);
+  -o-transform: rotate(-20deg);
+  transform: rotate(-20deg);
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    left: -20px;
+    top: -20px;
+  }
+
   border-right: 30px solid transparent;
   border-top: 30px solid transparent;
   border-left: 30px solid rgb(193, 60, 7);
@@ -238,42 +262,48 @@ const EyeL = styled.div`
   border-top-right-radius: 60px;
   border-bottom-left-radius: 60px;
   border-bottom-right-radius: 60px;
-  -webkit-filter: drop-shadow(0 0 10px rgb(248, 181, 0));
-  -moz-filter: drop-shadow(0 0 10px rgb(248, 181, 0));
-  filter: drop-shadow(0 0 10px rgb(248, 181, 0));
 
-  &:after {
-    content: "";
-    position: absolute;
-    width: 0px;
-    height: 0px;
-    left: -30px;
-    top: -30px;
+  ${(props) =>
+    props.$state == "normal" &&
+    `
+
+&:after {
+  border-right: 25px solid transparent;
+  border-top: 25px solid transparent;
+  border-left: 25px solid #CF5C05;
+  border-bottom: 25px solid #CF5C05;
+  border-top-left-radius: 60px;
+  border-top-right-radius: 60px;
+  border-bottom-left-radius: 60px;
+  border-bottom-right-radius: 60px;
+  -webkit-filter: drop-shadow(0 0 10px transparent);
+  -moz-filter: drop-shadow(0 0 10px transparent);
+  filter: drop-shadow(0 0 10px transparent);
+}
+
+`}
+
+  ${(props) =>
+    /(upset)|(complete)/gi.test(props.$state) &&
+    `
+  -webkit-filter: drop-shadow(0 0 10px ${props.$state == "complete" ? "rgb(248,181,0)" : "#f83a00"});
+  -moz-filter: drop-shadow(0 0 10px ${props.$state == "complete" ? "rgb(248,181,0)" : "#f83a00"});
+  filter: drop-shadow(0 0 10px ${props.$state == "complete" ? "rgb(248,181,0)" : "#f83a00"});
+  transition: all .2s ease-out;
+    &:after {
     border-right: 25px solid transparent;
     border-top: 25px solid transparent;
-    border-left: 25px solid rgb(248, 181, 0);
-    border-bottom: 25px solid rgb(248, 181, 0);
+    border-left: 25px solid ${props.$state == "complete" ? "rgb(248, 181, 0)" : "#f83a00"};
+    border-bottom: 25px solid ${props.$state == "complete" ? "rgb(248, 181, 0)" : "#f83a00"};
     border-top-left-radius: 60px;
     border-top-right-radius: 60px;
     border-bottom-left-radius: 60px;
     border-bottom-right-radius: 60px;
-    -webkit-filter: drop-shadow(0 0 10px rgb(248, 181, 0));
-    -moz-filter: drop-shadow(0 0 10px rgb(248, 181, 0));
-    filter: drop-shadow(0 0 10px rgb(248, 181, 0));
+    -webkit-filter: drop-shadow(0 0 10px ${props.$state == "complete" ? "rgb(248, 181, 0)" : "#f83a00"});
+    -moz-filter: drop-shadow(0 0 10px ${props.$state == "complete" ? "rgb(248, 181, 0)" : "#f83a00"});
+    filter: drop-shadow(0 0 10px ${props.$state == "complete" ? "rgb(248, 181, 0)" : "#f83a00"});
   }
-
-  &:after {
-    left: -20px;
-    top: -20px;
-  }
-
-  & {
-    -webkit-transform: rotate(-20deg);
-    -moz-transform: rotate(-20deg);
-    -ms-transform: rotate(-20deg);
-    -o-transform: rotate(-20deg);
-    transform: rotate(-20deg);
-  }
+    `}
 `;
 
 const EyeR = styled(EyeL)`
@@ -300,16 +330,17 @@ const Mouth = styled.div`
   border-top: 30px solid transparent;
   border-left: 30px solid rgb(193, 60, 7);
   border-bottom: 30px solid rgb(193, 60, 7);
-  border-top-left-radius: 60px;
+    border-top-left-radius: 60px;
   border-top-right-radius: 60px;
   border-bottom-left-radius: 60px;
   border-bottom-right-radius: 60px;
-  -webkit-filter: drop-shadow(0 0 10px rgb(248, 181, 0));
+  
   -webkit-transform: scale(2, 1) rotate(-45deg) translateX(10px)
     translateY(10px);
   -moz-transform: scale(2, 1) rotate(-45deg) translateX(10px) translateY(10px);
   -ms-transform: scale(2, 1) rotate(-45deg) translateX(10px) translateY(10px);
   -o-transform: scale(2, 1) rotate(-45deg) translateX(10px) translateY(10px);
+
 
   &:after {
     content: "";
@@ -320,16 +351,31 @@ const Mouth = styled.div`
     top: -25px;
     border-right: 25px solid transparent;
     border-top: 25px solid transparent;
-    border-left: 25px solid rgb(248, 181, 0);
+        ${(props) =>
+      props.$state == "normal" &&
+      `border-left: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    -moz-filter: drop-shadow(0 0 10px transparent);
+    filter: drop-shadow(0 0 10px transparent);
+      -webkit-filter: drop-shadow(0 0 10px transparent);
+
+  `}
+        ${(props) =>
+      props.$state == "complete" &&
+      `border-left: 25px solid rgb(248, 181, 0);
     border-bottom: 25px solid rgb(248, 181, 0);
-    border-top-left-radius: 60px;
+        -webkit-filter: drop-shadow(0 0 10px rgb(248, 181, 0));
+    -moz-filter: drop-shadow(0 0 10px rgb(248, 181, 0));
+    filter: drop-shadow(0 0 10px rgb(248, 181, 0));
+
+  `}
+      border-top-left-radius: 60px;
     border-top-right-radius: 60px;
     border-bottom-left-radius: 60px;
     border-bottom-right-radius: 60px;
-    -webkit-filter: drop-shadow(0 0 10px rgb(248, 181, 0));
-    -moz-filter: drop-shadow(0 0 10px rgb(248, 181, 0));
-    filter: drop-shadow(0 0 10px rgb(248, 181, 0));
   }
+
+
 `;
 
 export default PumpkinCSS;
